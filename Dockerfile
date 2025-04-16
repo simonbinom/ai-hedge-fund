@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Install poetry
-ENV POETRY_VERSION=1.8.2
+ENV POETRY_VERSION=1.8.5
 RUN curl -sSL https://install.python-poetry.org | python3 - \
  && ln -s /root/.local/bin/poetry /usr/local/bin/poetry
 
@@ -17,9 +17,8 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock* ./
 RUN poetry config virtualenvs.create false \
  && poetry install --no-interaction --no-ansi
+ COPY . .
 
-# Copy the rest of the application code
-COPY . .
-
-# Entry point
-CMD ["poetry", "run", "python", "src/main.py", "--ticker", "AAPL,MSFT,NVDA", "--show-reasoning"]
+# Start the application in the container
+ENTRYPOINT ["poetry", "run", "python", "src/main.py"]
+CMD ["--ticker", "AAPL,MSFT,NVDA", "--show-reasoning"]

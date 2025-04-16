@@ -132,9 +132,14 @@ poetry run python src/backtester.py --ticker AAPL,MSFT,NVDA --start-date 2024-01
 
 ## Running in Docker
 ```bash
+# Build the Docker image
 docker build -t ai-hedge-fund .
-docker-compose build --no-cache
-docker-compose run --rm ai-hedge-fund
+
+# Run the container (attached mode)
+docker run ai-hedge-fund
+
+# Or run in detached mode
+docker run -d ai-hedge-fund
 ```
 
 **Important**: Adjust the parameters in the Dockerfile as needed, particularly the final section that defines the entry point.
@@ -153,6 +158,20 @@ ai-hedge-fund/
 │   │   ├── technicals.py         # Technical analysis agent
 │   │   ├── valuation.py          # Valuation analysis agent
 │   │   ├── warren_buffett.py     # Warren Buffett agent
+│   │   ├── ben_graham.py         # Ben Graham agent
+│   │   ├── cathie_wood.py        # Cathie Wood agent
+│   │   ├── charlie_munger.py     # Charlie Munger agent
+│   │   ├── michael_burry.py      # Michael Burry agent
+│   │   ├── peter_lynch.py        # Peter Lynch agent
+│   │   ├── phil_fisher.py        # Phil Fisher agent
+│   │   ├── stanley_druckenmiller.py # Stanley Druckenmiller agent
+│   │   ├── warren_buffett.py     # Warren Buffett agent
+│   │   ├── valuation.py          # Valuation analysis agent
+│   │   ├── sentiment.py          # Sentiment analysis agent
+│   │   ├── fundamentals.py       # Fundamental analysis agent
+│   │   ├── technicals.py         # Technical analysis agent
+│   │   ├── risk_manager.py       # Risk management agent
+│   │   ├── portfolio_manager.py  # Portfolio management agent
 │   ├── tools/                    # Agent tools
 │   │   ├── api.py                # API tools
 │   ├── backtester.py             # Backtesting tools
