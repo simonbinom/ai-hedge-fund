@@ -1,9 +1,13 @@
+version: '3'
+
 services:
   ai-hedge-fund:
-    build: .
-    container_name: ai-hedge-fund
-    env_file: .env
-    stdin_open: true
-    tty: true
+    build:
+      context: .
+    env_file:
+      - .env
     volumes:
-      - .:/app
+      # Optional: Mount für Persistenz von Daten
+      - ./data:/app/data
+    tty: true
+    stdin_open: true

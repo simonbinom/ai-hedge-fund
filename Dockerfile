@@ -1,24 +1,31 @@
-FROM python:3.12-slim
+FROM python:3.9-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl build-essential git libffi-dev \
-    && apt-get clean
-
-# Install poetry
-ENV POETRY_VERSION=1.8.5
-RUN curl -sSL https://install.python-poetry.org | python3 - \
- && ln -s /root/.local/bin/poetry /usr/local/bin/poetry
-
-# Set working directory
+# Arbeitsverzeichnis im Container setzen
 WORKDIR /app
 
-# Copy project files
-COPY pyproject.toml poetry.lock* ./
-RUN poetry config virtualenvs.create false \
- && poetry install --no-interaction --no-ansi
- COPY . .
+# Poetry installieren
+RUN pip install poetry==1.7.1
 
-# Start the application in the container
-ENTRYPOINT ["poetry", "run", "python", "src/main.py"]
-CMD ["--ticker", "AAPL,MSFT,NVDA", "--show-reasoning"]
+# Kopieren der Poetry-Konfigurationsdateien
+COPY pyproject.toml poetry.lock ./
+
+# Poetry so konfigurieren, dass es keine virtuelle Umgebung erstellt
+RUN poetry config virtualenvs.create false
+
+# Abhängigkeiten installieren
+RUN poetry install --no-interaction --no-ansi
+
+# Kopieren des Anwendungscodes
+COPY src ./src
+COPY .env.example ./.env.example
+
+# Umgebungsvariablen für API-Schlüssel (können beim Container-Start überschrieben werden)
+ENV ANTHROPIC_API_KEY=""
+ENV DEEPSEEK_API_KEY=""
+ENV GROQ_API_KEY=""
+ENV GOOGLE_API_KEY=""
+ENV FINANCIAL_DATASETS_API_KEY=""
+ENV OPENAI_API_KEY=""
+
+# Startbefehl
+CMD ["python", "src/main.py"]
